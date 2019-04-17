@@ -11,11 +11,9 @@ def open_and_read_file(file_path):
     the file's contents as one string of text.
     """
 
-    # your code goes here
     with open(file_path) as opened_file:
         return opened_file.read()
     
-text_string = open_and_read_file("the_cat.txt")
 
 def make_chains(text_string, n):
     """Take input text as string; return dictionary of Markov chains.
@@ -45,15 +43,13 @@ def make_chains(text_string, n):
     # loop through list using index so we can get pairs instead single word
     # keep track of each word and every word that follows
     # store those in a string
-    # 
 
     chains = {}
     text_list = text_string.split()
 
     for i in range(len(text_list) - n):
 
-        # key_tuple = (text_list[i], text_list[i + 1])
-        key_tuple = tuple([text_list[j] for j in range(i, i+n)])
+        key_tuple = tuple([text_list[j] for j in range(i, i + n)])
 
         chains[key_tuple] = chains.get(key_tuple, [])
         chains[key_tuple].append(text_list[i + n])
@@ -61,7 +57,6 @@ def make_chains(text_string, n):
 
     return chains
 
-# print(make_chains(text_string, 3))
 
 
 def make_text(chains, n):
@@ -78,18 +73,16 @@ def make_text(chains, n):
     words.extend(list_group)
     punct = ['.', '?', '!']
 
-    # print(word_group)
-    # print(words)
 
     while len(words) <= 50:
             random_word = choice(chains[word_group])
             words.append(random_word)
+
             if random_word[-1] in punct: 
                 break                
 
             else:
-                list_group = list_group[(-n+1)::]
-                list_group.append(random_word)          
+                list_group = list_group[(-n+1)::] + [random_word]
                 word_group = tuple(list_group)
 
 
