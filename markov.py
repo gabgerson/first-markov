@@ -50,15 +50,12 @@ def make_chains(text_string):
     chains = {}
     text_list = text_string.split()
 
-    for i in range(len(text_list) - 1):
+    for i in range(len(text_list) - 2):
 
         key_tuple = (text_list[i], text_list[i + 1])
 
-        if i == len(text_list) - 2:
-            pass
-        else:
-            chains[key_tuple] = chains.get(key_tuple, [])
-            chains[key_tuple].append(text_list[i + 2])
+        chains[key_tuple] = chains.get(key_tuple, [])
+        chains[key_tuple].append(text_list[i + 2])
 
 
     return chains
