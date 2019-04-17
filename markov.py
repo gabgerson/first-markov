@@ -15,9 +15,9 @@ def open_and_read_file(file_path):
     with open(file_path) as opened_file:
         return opened_file.read()
     
+text_string = open_and_read_file("the_cat.txt")
 
-
-def make_chains(text_string):
+def make_chains(text_string, n):
     """Take input text as string; return dictionary of Markov chains.
 
     A chain will be a key that consists of a tuple of (word1, word2)
@@ -50,20 +50,21 @@ def make_chains(text_string):
     chains = {}
     text_list = text_string.split()
 
-    for i in range(len(text_list) - 2):
+    for i in range(len(text_list) - n):
 
-        key_tuple = (text_list[i], text_list[i + 1])
+        # key_tuple = (text_list[i], text_list[i + 1])
+        key_tuple = tuple([text_list[j] for j in range(i, i+n)])
 
         chains[key_tuple] = chains.get(key_tuple, [])
-        chains[key_tuple].append(text_list[i + 2])
+        chains[key_tuple].append(text_list[i + n])
 
 
     return chains
 
-# print(make_chains(text_string))
+# print(make_chains(text_string, 3))
 
 
-def make_text(chains):
+def make_text(chains, n):
     """Return text from chains."""
 
     # randomly choose a key_tuple from dict
@@ -72,21 +73,25 @@ def make_text(chains):
     words = []
 
     keys_list = [key for key in chains.keys() if key[0][0].isupper()]
-    word_pair = choice(keys_list)
-    words.extend([word_pair[0], word_pair[1]])
-
+    word_group = choice(keys_list)
+    list_group = list(word_group)
+    words.extend(list_group)
     punct = ['.', '?', '!']
+
+    # print(word_group)
+    # print(words)
+
     while len(words) <= 50:
-            random_word = choice(chains[word_pair])
+            random_word = choice(chains[word_group])
             words.append(random_word)
             if random_word[-1] in punct: 
                 break                
 
-            else:          
-                word_pair = (word_pair[1], random_word)
+            else:
+                list_group = list_group[(-n+1)::]
+                list_group.append(random_word)          
+                word_group = tuple(list_group)
 
-        # except KeyError:
-        #     break
 
 
     return " ".join(words)
@@ -99,9 +104,9 @@ input_path = sys.argv[1]
 input_text = open_and_read_file(input_path)
 
 # Get a Markov chain
-chains = make_chains(input_text)
+chains = make_chains(input_text, 4)
 
 # Produce random text
-random_text = make_text(chains)
+random_text = make_text(chains, 4)
 
 print(random_text)
